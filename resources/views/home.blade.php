@@ -1,22 +1,46 @@
 @extends('layouts.admin')
 @section('content')
-<div class="content">
-@foreach($tiles as $tile)
-    <div class="col-md-4">
-        <div class="row space-16">&nbsp;</div>
-            <div class="thumbnail">
-                <div class="caption text-center" onclick="location.href='https://flow.microsoft.com/en-us/connectors/shared_slack/slack/'">
-                <div class="position-relative">
-                    <img src="https://az818438.vo.msecnd.net/icons/slack.png" style="width:72px;height:72px;" />
-                </div>
-                <h4 id="thumbnail-label"><a href="https://flow.microsoft.com/en-us/connectors/shared_slack/slack/" target="_blank">{{$tile->name}}</a></h4>           
-            </div>  
-        </div>
-    </div>
-@endforeach
+<div class="content" id="user-data">
+    @include('data')
+</div>
+<div class="infinite-scroll text-center">
+    <button type="submit" class="more-tails">Show More</button>
 </div>
 @endsection
 @section('scripts')
 @parent
-
+<script>
+    let defaultPage = 1;
+    $(".more-tails").on('click', function () {
+        defaultPage++;
+        loadMoreData(defaultPage);
+    });
+    function loadMoreData(defaultPage){
+        $.ajax(
+            {
+                type: "get",
+                data: {
+                    page: defaultPage,
+                },
+                beforeSend: function()
+                {
+                    $('.infinite-scroll').show();
+                }
+            })
+            .done(function(data)
+            {
+                defaultPage = data.page + 1;
+                if(data.html === ""){
+                    $('.infinite-scroll').hide();
+                    $('.infinite-scroll').html("No more Any records found");
+                    return;
+                }
+                $("#user-data").append(data.html);
+            })
+            .fail(function(jqXHR, ajaxOptions, thrownError)
+            {
+                console.log('server not responding...');
+            });
+    }
+</script>
 @endsection
