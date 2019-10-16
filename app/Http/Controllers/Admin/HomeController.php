@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        $tiles = DB::table('tiles')->paginate(2);
+        $tiles = DB::table('tiles')->orderBy('created_at', 'desc')->paginate(2);
         if($request->ajax())
         {
             $view = view('data', compact('tiles'))->render();
