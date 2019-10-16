@@ -1,16 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
-use App\Tile;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
-class HomeController extends Controller
+class HomeController
 {
     public function index()
     {
-        $tiles = Tile::all();
-        return view('home', compact('tiles'));
+        return view('home');
     }
 }
